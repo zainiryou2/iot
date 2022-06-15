@@ -1,0 +1,11 @@
+#lumDiv {
+    float: left;
+    width: 49%;
+    text-align: center;
+}
+
+#disDiv {
+  float: right;
+  width: 49%;
+  text-align: center;
+}
