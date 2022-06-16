@@ -2,10 +2,32 @@
     float: left;
     width: 49%;
     text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 #disDiv {
   float: right;
   width: 49%;
   text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+#lampadaire {
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.allume {
+  color: rgb(4, 150, 4);
+}
+
+.eteint{
+  color: rgb(189, 2, 2);
 }

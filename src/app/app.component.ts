@@ -15,10 +15,11 @@ export class AppComponent {
   @ViewChild('myChartDis', { static: false }) myChartDis!: jqxChartComponent;
   titleLum = 'Variation de la luminosité';
   titleDis = 'Variation de la distance';
-  checkEtat = false;
+  allumer = false;
   compteur = 0;
   distance = 0;
   luminosite = 0;
+  intensite = 0;
   sourceArray: any[] = [];
   url =
     'http://localhost:8080/http://miage.mecanaute.com:22222/Thingworx/Things/MIAGE.843668/Properties';
@@ -64,17 +65,19 @@ export class AppComponent {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.getPropertyTest();
+    this.getProperty();
   }
 
   getProperty() {
-    const timer = 5000; // ms
+    const timer = 2000; // ms
     interval(timer)
       .pipe(mergeMap(() => this.http.get(this.url, this.httpOptions)))
       .subscribe((data: any) => {
+        this.compteur++;
         this.luminosite = data.rows[0].LIGHT_LUX;
         this.distance = data.rows[0].LIGHT_DIST;
         this.updateChartValues();
+        this.updatePuissance();
       });
   }
 
@@ -96,12 +99,27 @@ export class AppComponent {
       luminosite: this.luminosite,
       distance: this.distance
     });
-    if (this.luminosite >= 100) {
-      this.checkEtat = true;
+    if (this.luminosite <= 100 && this.distance == 0) {
+      this.allumer = true;
     } else {
-      this.checkEtat = false;
+      this.allumer = false;
     }
     this.myChartLum.update();
     this.myChartDis.update();
+  }
+
+  updatePuissance(){
+    if(this.luminosite <= 100)
+      this.intensite = 38;
+    if(this.luminosite <= 75)
+      this.intensite = 45;
+    if(this.luminosite <= 50)
+      this.intensite = 48;
+    if(this.luminosite <= 25)
+      this.intensite = 58;
+  }
+
+  checkClassEtat(){
+    return this.luminosite <= 100 && this.distance === 0 ? 'allume' : 'eteint'
   }
 }

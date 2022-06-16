@@ -1,12 +1,5 @@
-<div>
-
-
-  <p *ngIf="!checkEtat">Lampadaire éteint</p>
-  <p *ngIf="checkEtat">Lampadaire allumé</p>
-</div>
 <div id="lumDiv">
-  <label>Luminosité : </label>
-  <p>{{ luminosite }}</p>
+  <p [ngClass]="checkClassEtat()">Luminosité : {{ luminosite }}</p>
   <jqxChart
     #myChartLum
     [height]="500"
@@ -20,8 +13,7 @@
   </jqxChart>
 </div>
 <div id="disDiv">
-  <label>Distance : </label>
-  <p>{{ distance }}</p>
+  <p [ngClass]="checkClassEtat()">Distance : {{ distance }}</p>
   <jqxChart
     #myChartDis
     [height]="500"
@@ -33,4 +25,8 @@
     [enableAnimations]="true"
   >
   </jqxChart>
+</div>
+<div id="lampadaire">
+  <p *ngIf="!allumer" class="eteint">Lampadaire éteint</p>
+  <p *ngIf="allumer" class="allume">Présence détectée <br/> Lampadaire allumé : {{ intensite }} Watts</p>
 </div>
