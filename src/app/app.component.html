@@ -1,32 +1,91 @@
-<div id="lumDiv">
-  <p [ngClass]="checkClassEtat()">Luminosité : {{ luminosite }}</p>
-  <jqxChart
-    #myChartLum
-    [height]="500"
-    [title]="titleLum"
-    [xAxis]="xAxis"
-    [seriesGroups]="seriesGroupsLum"
-    [source]="sourceArray"
-    [showLegend]="true"
-    [enableAnimations]="true"
-  >
-  </jqxChart>
+<div id="bodydiv ">
+  <div class="row headers" >
+    <div class="header">
+      <div class="card">
+        <h5 class="card-header text-uppercase center"> <span [ngClass]="checkClassEtat()">Luminosité</span></h5>
+        <div class="card-body">
+          <h5 class="card-title"><span [ngClass]="checkClassEtat()">{{ luminosite.toFixed(2) }} lux</span></h5>
+        </div>
+      </div>
+    </div>
+    <div class="header">
+      <div class="card">
+        <h5 class="card-header text-uppercase center"> <span [ngClass]="checkClassEtat()">Distance</span></h5>
+        <div class="card-body">
+          <h5 class="card-title"><span [ngClass]="checkClassEtat()">{{ distance.toFixed(2) }} cm</span></h5>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row ">
+    <div class="col-md-6 ">
+      <div id="lumDiv ">
+        <jqxChart
+          #myChartLum
+          [height]="500"
+          [title]="titleLum"
+          [xAxis]="xAxis"
+          [seriesGroups]="seriesGroupsLum"
+          [source]="sourceArray"
+          [showLegend]="true"
+          [enableAnimations]="true"
+        >
+        </jqxChart>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="disDiv">
+        <jqxChart
+          #myChartDis
+          [height]="500"
+          [title]="titleDis"
+          [xAxis]="xAxis"
+          [seriesGroups]="seriesGroupsDis"
+          [source]="sourceArray"
+          [showLegend]="true"
+          [enableAnimations]="true"
+        >
+        </jqxChart>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div id="lampadaire">
+        <div class="card number">
+          <p *ngIf="!allumer" class="eteint">Lampadaire éteint</p>
+          <p *ngIf="allumer" class="allume">
+            Présence détectée <br />
+            Lampadaire allumé : {{ intensite }} Watts
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row my-4 footers">
+      <div class="card footer">
+        <h5 class="card-header text-uppercase center">Consommation continue</h5>
+        <div class="card-body">
+          <h5 class="card-title">{{ intensiteContinukWH }} kW/h</h5>
+        </div>
+      </div>
+
+      <div class="card footer">
+        <h5 class="card-header text-uppercase center">Consommation dymanique</h5>
+        <div class="card-body">
+          <h5 class="card-title">{{ intensiteDynamiquekWH }} kW/h</h5>
+        </div>
+      </div>
+
+      <div class="card footer">
+        <h5 class="card-header text-uppercase center">Argent économisé</h5>
+        <div class="card-body">
+          <h5 class="card-title">{{ coutDifference }} €</h5>
+        </div>
+      </div>
+
+  </div>
 </div>
-<div id="disDiv">
-  <p [ngClass]="checkClassEtat()">Distance : {{ distance }}</p>
-  <jqxChart
-    #myChartDis
-    [height]="500"
-    [title]="titleDis"
-    [xAxis]="xAxis"
-    [seriesGroups]="seriesGroupsDis"
-    [source]="sourceArray"
-    [showLegend]="true"
-    [enableAnimations]="true"
-  >
-  </jqxChart>
-</div>
-<div id="lampadaire">
-  <p *ngIf="!allumer" class="eteint">Lampadaire éteint</p>
-  <p *ngIf="allumer" class="allume">Présence détectée <br/> Lampadaire allumé : {{ intensite }} Watts</p>
-</div>
+

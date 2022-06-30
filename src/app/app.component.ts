@@ -17,10 +17,21 @@ export class AppComponent {
   titleDis = 'Variation de la distance';
   allumer = false;
   compteur = 0;
+  compteurHeure = 0;
   distance = 0;
   luminosite = 0;
+  intensiteDynamique = 0;
+  intensiteContinu = 0;
+  intensiteDynamiquekWH;
+  intensiteContinukWH;
+  differencekWH = 0;
+  coutDifference;
   intensite = 0;
+  economie = 0;
+  actualisation = 4;
+  lampadaire = 38;
   sourceArray: any[] = [];
+  lampadaireValeurs: any[] = [];
   url =
     'http://localhost:8080/http://miage.mecanaute.com:22222/Thingworx/Things/MIAGE.843668/Properties';
   httpOptions = {
@@ -34,7 +45,7 @@ export class AppComponent {
     dataField: 'id',
     gridLines: { visible: true },
     title: 'Test Id',
-    unitInterval: 1
+    unitInterval: this.actualisation
   };
 
   valueAxis: any = {
@@ -65,15 +76,15 @@ export class AppComponent {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.getProperty();
+    this.getPropertyTest();
   }
 
   getProperty() {
-    const timer = 2000; // ms
+    const timer = this.actualisation * 1000; // ms
     interval(timer)
       .pipe(mergeMap(() => this.http.get(this.url, this.httpOptions)))
       .subscribe((data: any) => {
-        this.compteur++;
+        this.compteur += this.actualisation;
         this.luminosite = data.rows[0].LIGHT_LUX;
         this.distance = data.rows[0].LIGHT_DIST;
         this.updateChartValues();
@@ -82,33 +93,50 @@ export class AppComponent {
   }
 
   getPropertyTest() {
-    const timer = 1000; // ms
+    const timer = this.actualisation * 1000; // ms
     interval(timer)
-      .pipe(mergeMap(() => of([Math.random() * 200, Math.random() * 10])))
+      .pipe(mergeMap(() => of([Math.random() * 125, Math.random() * 2])))
       .subscribe((nombre) => {
-        this.compteur++;
+        this.compteur += this.actualisation;
         this.luminosite = nombre[0];
         this.distance = nombre[1];
         this.updateChartValues();
+        this.updatePuissance();
       });
   }
 
   updateChartValues(){
+    if(this.sourceArray.length > 9){
+      this.sourceArray.splice(0,1);
+    }
     this.sourceArray.push({
       id: this.compteur,
       luminosite: this.luminosite,
       distance: this.distance
     });
-    if (this.luminosite <= 100 && this.distance == 0) {
-      this.allumer = true;
-    } else {
-      this.allumer = false;
-    }
+
     this.myChartLum.update();
     this.myChartDis.update();
   }
 
   updatePuissance(){
+    this.compteurHeure = this.compteur / 3600;
+    this.intensiteContinu += (this.lampadaire * this.actualisation);
+    console.log("int cont "+this.intensiteContinu);
+    console.log("lamp "+this.lampadaire);
+    console.log("act "+this.actualisation);
+    console.log("c heure "+this.compteurHeure);
+    if (this.luminosite <= 100 && this.distance <= 2) {
+      this.allumer = true;
+      this.intensiteDynamique += (this.intensite * this.actualisation);
+    } else {
+      this.allumer = false;
+    }
+    this.intensiteContinukWH = ((this.intensiteContinu / 1000) / this.compteurHeure).toFixed(2);
+    this.intensiteDynamiquekWH = ((this.intensiteDynamique / 1000) / this.compteurHeure).toFixed(2);
+    this.differencekWH += this.intensiteContinukWH - this.intensiteDynamiquekWH;
+    this.coutDifference = ((this.differencekWH * 11.06) / 100).toFixed(2);
+
     if(this.luminosite <= 100)
       this.intensite = 38;
     if(this.luminosite <= 75)
@@ -120,6 +148,6 @@ export class AppComponent {
   }
 
   checkClassEtat(){
-    return this.luminosite <= 100 && this.distance === 0 ? 'allume' : 'eteint'
+    return this.luminosite <= 100 && this.distance <=2 ? 'allume' : 'eteint'
   }
 }
